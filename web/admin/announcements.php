@@ -1,0 +1,6 @@
+<?php require '../inc.php';guard('admin');
+if($_POST){isset($_POST['title'])?api('announcement','create',[],$_POST):api('announcement','delete',[],['id'=>$_POST['id']]);header('Location: announcements.php');exit;}
+$a=api('announcement','all');top('Announcements','announcements');?>
+<h1>System Announcements <a class="btn" style="float:right;font-size:15px;text-decoration:none" href="?new=1">+ Post Announcement</a></h1><br>
+<?php if(isset($_GET['new'])):?><form method="post" class="card"><div class="row"><input name="title" placeholder="Title" required></div><div class="row"><input name="content" placeholder="Message" required></div><label><input type="checkbox" name="pin"> Pin</label> <button class="btn">Post</button></form><?php endif;?>
+<?php foreach($a as $x):?><div class="card"><span class="tag" style="background:#f3e8ff;color:#7e22ce"><?=ui_icon('megaphone')?> <?=h(ucfirst($x['announcement_type']))?></span><form method="post" style="float:right" onsubmit="return confirm('Delete?')"><input type="hidden" name="id" value="<?=$x['announcement_id']?>"><button class="lnk d">Delete</button></form><h3><?=h($x['title'])?></h3><p><?=h($x['content'])?></p><p><small>Posted <?=h(substr($x['created_at'],0,10))?></small></p></div><?php endforeach;bottom();
